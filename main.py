@@ -97,7 +97,7 @@ def check(uploaded_file):
             try:
 
                 audio_file_path = video_extract_audio(uploaded_file)
-                return audio_file_path
+                return [audio_file_path, False]
             except Exception as e:
                 st.warning("An error occurred while processing the video file.")
                 st.warning("Please try uploading the file again.")
@@ -110,7 +110,7 @@ def check(uploaded_file):
             try:
                 
                 audio_file_path = audio_convert_to_wav(uploaded_file)
-                return audio_file_path
+                return [audio_file_path, True]
             except Exception as e:
                 st.warning("An error occurred while processing the audio file.")
                 st.warning("Please try uploading the file again.")
@@ -149,7 +149,7 @@ def video_extract_audio(video_file):
 
         # Write the audio file
         audio_clip.write_audiofile(audio_path)
-        return audio_path
+        return [audio_path,video_file_path]
     except Exception as e:
         st.warning("An error occurred while extracting audio from the video file.")
         st.warning("Please try uploading the file again.")
@@ -168,7 +168,7 @@ def segment_audio():
     st.write("This page allows you to segment audio files according to different speakers.")
     # make varibale flag and store it value inside cache and if avaliale in cache then take it from there else make it none 
     if 'available' not in st.session_state: 
-        st.session_state["available"] = True
+        st.session_state["available"] = False
     
     if(st.session_state.available == False):
         # if "segmented_audio" folder exists delete it
@@ -195,6 +195,9 @@ def segment_audio():
 
         # if file is not none load the model_1 file
         if file is not None:
+            if os.path.exists("segmented_audio"):
+                shutil.rmtree("segmented_audio")
+                print("deleted segmented_audio folder")
             if st.button("Segment Audio"):
                 with st.spinner("Segmenting audio..."):  # Show spinner while loading
                     # Load the model
@@ -205,14 +208,14 @@ def segment_audio():
                     if(model is not None):
                         st.write("Processing the file in the background...")
                     # Process the audio file
-                        model_1.auidodiarization(model, file)
+                        model_1.auidodiarization(model, file[0], file[1])
                         st.write("Audio segmented successfully!")
                         st.session_state["available"] = True
                         st.button("Go to next page...")
                                                 
                     else:
                         st.write("Model not loaded successfully! Please try again")
-                selected_file = st.selectbox("Select a file:", list_files("segmented_audio")) 
+                # selected_file = st.selectbox("Select a file:", list_files("segmented_audio")) 
 
     elif st.session_state.available == True:
 
@@ -226,6 +229,11 @@ def segment_audio():
             label="Download File",
             data=open(os.path.join("segmented_audio", selected_file), 'rb').read(),
             file_name=selected_file)
+            # if st.button("Go to previous Page"):
+            #     st.session_state.availabl = False
+            # 
+                
+                
 
         elif selected_file.endswith(('.mp4', '.mkv', '.avi')):
             video_file = open(os.path.join("segmented_audio", selected_file), 'rb')
@@ -236,9 +244,15 @@ def segment_audio():
             data=open(os.path.join("segmented_audio", selected_file), 'rb').read(),
             file_name=selected_file )
         
-        st.button("Go to prev page")
-        # st.session_state["available"] = False
-        # delete  the "segmented_audio" folder with all the file in it
+    # if st.button("Go to previous Page"):
+    #     st.session_state.availabl = False
+            
+    #     print(st.session_state.availabl)
+    #         # reload the website
+    #     st.rerun()
+                
+        
+        
         
 
         
@@ -272,10 +286,21 @@ def speech_to_text():
                 model = model_2.load_model(modeltype)
                 st.write("Model loaded successfully!")
                 print(selected_language_code)
-                transcription = model_2.fn_transcribe(model, file, selected_language_code)
+                transcription = model_2.fn_transcribe(model, file[0],file[1], selected_language_code)
                  
                 # data = format_translation(transcription)
                 st.write("Transcription completed!")
+                srt_entries = [
+                    f"{index}\n{ms_to_time(dic['start'])} --> {ms_to_time(dic['end'])}\n{dic['text']}\n\n"
+                    for index, dic in enumerate(transcription['segments'], start=1)
+                ]
+
+                # Join the segment information strings with newline characters
+                result_string = "\n".join(srt_entries)
+
+                # Now, result_string contains all the information concatenated together
+                # print(result_string)
+
 
                 if transcription is not None:
                     # give dowload option
@@ -285,6 +310,7 @@ def speech_to_text():
                     st.write("Click the button below to download the text file.")
 
                     download_text_file(transcription['text'])
+                    download_text_file_withtime(result_string)
 
                     st.markdown(transcription['text'])
 
@@ -299,7 +325,21 @@ def download_text_file(data, filename='downloaded_data.txt'):
     buffer.seek(0)
     # Return the buffer for download
     st.download_button(
-        label="Download Text File",
+        label="Download Transcript File",
+        data=buffer,
+        file_name=filename,
+        mime="text/plain"
+    )
+def download_text_file_withtime(data, filename='transcript_with_time.srt'):
+    # Create a BytesIO object
+    buffer = BytesIO()
+    # Write the string data to the buffer
+    buffer.write(data.encode())
+    # Set the cursor to the beginning of the buffer
+    buffer.seek(0)
+    # Return the buffer for download
+    st.download_button(
+        label="Download Transcript in SRT Format",
         data=buffer,
         file_name=filename,
         mime="text/plain"

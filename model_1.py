@@ -5,6 +5,7 @@ from pyannote.audio.pipelines.utils.hook import ProgressHook
 from pydub import AudioSegment
 import os
 from dotenv import load_dotenv
+from moviepy.editor import VideoFileClip, concatenate_videoclips
 load_dotenv()
 
 device = None
@@ -18,8 +19,15 @@ def load_model(modeltype = "base"):
     return pipeline
 
 # transcribe audio
-def auidodiarization(model, path):
-    waveform, sample_rate = torchaudio.load(path)
+def auidodiarization(model, path,audio):
+    audio_patth = None
+    video_path = None
+    if(audio == True):
+        audio_path = path
+    elif(audio == False):
+        video_path = path[1]
+        audio_path = path[0]
+    waveform, sample_rate = torchaudio.load(audio_path)
     dz = None
     with ProgressHook() as hook:
         dz = model({"waveform": waveform, "sample_rate": sample_rate}, hook=hook)
@@ -68,12 +76,21 @@ def auidodiarization(model, path):
             time_ranges = [time_range.strip("[]").split(" -> ") for time_range in time_ranges.split(", ")]
             speaker_data[speaker] = time_ranges
     
-    input_audio_path = path
-    # Output folder for split audio files
-    output_folder = "segmented_audio"
-    # Create output folder if it doesn't exist
-    os.makedirs(output_folder, exist_ok=True)
-    split_audio(input_audio_path, output_folder, speaker_data)
+    if(audio == True):
+        input_audio_path = audio_path
+        # Output folder for split audio files
+        output_folder = "segmented_audio"
+        # Create output folder if it doesn't exist
+        os.makedirs(output_folder, exist_ok=True)
+        split_audio(input_audio_path, output_folder, speaker_data)
+    elif(audio == False):
+        input_audio_path = video_path
+        output_folder = "segmented_audio"
+        os.makedirs(output_folder, exist_ok=True)
+        split_video(input_audio_path, output_folder, speaker_data)
+
+
+        
 
 
 
@@ -89,6 +106,9 @@ def parse_time_strings(time_strings):
     start_time = time_strings[0].strip("'")
     end_time = time_strings[1].strip("'")
     return start_time, end_time
+def time_to_sec(timeStr):
+    spl = timeStr.split(":")
+    return int(spl[0]) * 3600 + int(spl[1]) * 60 + float(spl[2])
 
 # Function to split audio file
 def split_audio(input_audio_path, output_folder, speaker_data):
@@ -108,3 +128,21 @@ def split_audio(input_audio_path, output_folder, speaker_data):
         output_path = os.path.join(output_folder, f"{speaker}.wav")
 
         speaker_audio.export(output_path, format="wav")
+
+def split_video(input_video_path, output_folder, speaker_data):
+    video = VideoFileClip(input_video_path)
+    
+    for speaker, time_ranges in speaker_data.items():
+
+        speaker_clips = []
+        
+        for i, time_range in enumerate(time_ranges):
+            start_time, end_time = parse_time_strings(time_range)
+            start = time_to_sec(start_time)
+            end = time_to_sec(end_time)
+            print("start time" + str(start_time) ,"end time" + str(end_time) , "duration of video" + str(video.duration))
+            segment_clip = video.subclip(start, end)
+            speaker_clips.append(segment_clip)
+        final_video = concatenate_videoclips(speaker_clips)
+        output_path = os.path.join(output_folder, f"{speaker}.mp4")
+        final_video.write_videofile(output_path, codec="libx264", fps=video.fps)
