@@ -9,6 +9,8 @@ import model_1
 from io import BytesIO
 from moviepy.editor import VideoFileClip
 from streamlit_extras.mention import mention
+import streamlit.components.v1 as components
+
 
 # List of supported languages with their full names
 languages = {
@@ -140,7 +142,7 @@ def video_extract_audio(video_file):
 def home():
     st.title("VoiceVerse 🗣️")
     st.header("Welcome to VoiceVerse!!")
-    st.text("We are dedicated to recommending the latest and most interesting news articles!")
+    st.text("Unlock Clarity, Embrace Precision")
     my_expander1 = st.expander("**What is VoiceVerse?**")
     my_expander1.write("VoiceVerse is a reliable, secure and innovative platform revolutionizing the way we interact with audio and video content. With cutting-edge technology, VoiceVerse offers advanced features like audio/video diarisation, allowing users to effortlessly organize and navigate through their recordings. Additionally, our text-to-speech functionality breaks language barriers by providing accurate subtitles in multiple languages. Whether you're a seasoned user or new to the scene, VoiceVerse empowers everyone to engage with audio and video content seamlessly")
     my_expander2 = st.expander("**What is Segment Audio and How does it work**")
@@ -369,12 +371,25 @@ def Creators():
         mention(label="Linkedin", icon="🔗", url="https://www.linkedin.com/in/rohit-kumar-534919201/")
         st.write("Rohit@iiitd.ac.in")
     
-       
+def show_privacy_policy_popup():
+    privacy_policy_text = """
+    <script>
+        alert("User Agreement & Privacy Policy\\n\\n1. By using our service, you grant consent for the utilization of your audio and video recordings exclusively for diarization and captioning.\\n2. Your audio and video data will be used solely for intended purposes, with adherence to stringent privacy standards.\\n3. We uphold a strict policy of non-retention for your input files. Your data is promptly deleted upon closure of our website, ensuring your privacy and data security.");
+    </script>
+    """
+    # alert("User Permissions and Data Privacy\\n\\n6. Opt-In/Opt-Out Mechanism: We respect your preferences. You have the liberty to opt in or opt out of various data processing activities, ensuring full control over your data.\\n7. Cookie Policy: Our cookie policy is transparent, informing you about cookie usage and providing options to manage your preferences regarding tracking technologies.\\n8. GDPR and Privacy Regulations Compliance: We are fully committed to compliance with GDPR and other relevant privacy regulations, ensuring the protection of your data rights and privacy.\\n9. Children's Privacy: Compliance with regulations concerning data collection from children is paramount. We adhere to all applicable laws and obtain necessary parental consent where required.\\n10. Terms of Service and Privacy Policy: Please refer to our comprehensive Terms of Service and Privacy Policy documents for detailed information on your rights, responsibilities, and our commitment to data privacy.");
+
+    components.html(privacy_policy_text, height=100, width=100)       
 # -------------------------------------------------------------------------------------------------------------------------
 # Main function to handle page navigation
 def main():
-
     st.set_page_config(page_title="VoiceVerse", page_icon="🗣️", layout="centered", initial_sidebar_state="expanded")
+
+    if 'showarning' not in st.session_state: 
+        st.session_state["showarning"] = False
+
+    
+                         
     st.sidebar.title("VoiceVerse 🗣️ ")
     page = st.sidebar.radio(" ", ["Home", "Segment Audio", "Speech to Text","Creators"])
     st.sidebar.subheader("Feedback Form:")
@@ -384,6 +399,10 @@ def main():
     #MainMenu {visibility: hidden;}
 	footer {visibility: hidden;}
 	</style> """, unsafe_allow_html=True)
+
+    if st.session_state['showarning'] == False:
+        st.session_state["showarning"] = True
+        show_privacy_policy_popup()
 
     if page == "Home":
         home()
