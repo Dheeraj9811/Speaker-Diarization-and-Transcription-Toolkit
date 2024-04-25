@@ -1,24 +1,3 @@
-# import streamlit as st
-
-# # Function to check if the file extension is valid for videos
-# def is_video_file(filename):
-#     valid_extensions = ['.mp4', '.mkv', '.avi']
-#     return any(filename.endswith(ext) for ext in valid_extensions)
-
-# # Function to check if the file extension is valid for audio
-# def is_audio_file(filename):
-#     valid_extensions = ['.mp3', '.ogg', '.flac', '.wav']
-#     return any(filename.endswith(ext) for ext in valid_extensions)
-
-# # Main code
-# # use markdown and write in bold making life easier
-# st.markdown("#  Making Life Easier")
-
-# # Title of the app in samll format
-
-# st.markdown("### File Uploader")
-
-
 import streamlit as st
 import os
 import shutil
@@ -29,6 +8,7 @@ import model_2
 import model_1
 from io import BytesIO
 from moviepy.editor import VideoFileClip
+from streamlit_extras.mention import mention
 
 # List of supported languages with their full names
 languages = {
@@ -158,36 +138,40 @@ def video_extract_audio(video_file):
 
 # Define function for home page
 def home():
-    st.title("Welcome to our App")
-    st.write("This is the home page where you can find instructions and information about us.")
+    st.title("VoiceVerse 🗣️")
+    st.header("Welcome to VoiceVerse!!")
+    st.text("We are dedicated to recommending the latest and most interesting news articles!")
+    my_expander1 = st.expander("**What is VoiceVerse?**")
+    my_expander1.write("VoiceVerse is a reliable, secure and innovative platform revolutionizing the way we interact with audio and video content. With cutting-edge technology, VoiceVerse offers advanced features like audio/video diarisation, allowing users to effortlessly organize and navigate through their recordings. Additionally, our text-to-speech functionality breaks language barriers by providing accurate subtitles in multiple languages. Whether you're a seasoned user or new to the scene, VoiceVerse empowers everyone to engage with audio and video content seamlessly")
+    my_expander2 = st.expander("**What is Segment Audio and How does it work**")
+    my_expander2.write('''Using cutting-edge algorithms, VoiceVerse automatically divides the audio or video into separate segments corresponding to different speakers, making it easier to analyze and transcribe.\n 
+**How does it work:**
+1. Upload your audio or video file to VoiceVerse.
+2. VoiceVerse utilizes advanced speaker diarization algorithms to analyze the recording.
+3. Individual speakers within the recording are identified and isolated using these algorithms.
+4. Each segment corresponding to a different speaker is assigned a unique identifier.
+5. This unique identifier allows users to easily differentiate between speakers and analyze their respective segments.
+6. You can download the audio or video of the specific speaker that you want to use''')
+    my_expander3 = st.expander("**Whaat is Speech to Text and how does it work**")
+    my_expander3.write('''With VoiceVerse's text-to-speech feature, you can effortlessly generate subtitles for your audio and video content.\n
+**How does it work:**
+1. Upload your audio or video file to VoiceVerse.
+2. Choose from our range of text-to-speech models—tiny, base, or small—each offering a different balance between speed and accuracy. Additionally, select the target language for your subtitles. VoiceVerse supports multiple languages, allowing you to create subtitles in any language, regardless of the original audio content's language.
+3. VoiceVerse will generate subtitles for your audio or video content in the specified language.''')
+
+
     # Add any additional content or instructions here
 
 # Define function for segmenting audio
 def segment_audio():
     st.title("Segment Audio by Speaker")
-    st.write("This page allows you to segment audio files according to different speakers.")
+    st.subheader("You can segment audio & video files speakerwise here.")
     # make varibale flag and store it value inside cache and if avaliale in cache then take it from there else make it none 
     if 'available' not in st.session_state: 
         st.session_state["available"] = False
     
     if(st.session_state.available == False):
-        # if "segmented_audio" folder exists delete it
-        # if os.path.exists("segmented_audio"):
-        #     shutil.rmtree("segmented_audio")
-        #     print("deleted segmented_audio folder")
-
-        # # if "final_diarization.txt" file exists delete it
-        # if os.path.exists("final_diarization.txt"):
-        #     os.remove("final_diarization.txt")
-        #     print("deleted final_diarization.txt file")
-        # # if "uploads" folder exists delete it
-        # if os.path.exists("uploads"):
-        #     shutil.rmtree("uploads")
-        #     print("deleted uploads folder")
-        # #  if "diarization" file exists delete it
-        # if os.path.exists("diarization"):
-        #     os.remove("diarization")
-        #     print("deleted diarization file")
+        
         
         uploaded_file = st.file_uploader("Upload a video or audio file", type=['mp4', 'mkv', 'avi', 'mp3', 'ogg', 'flac', 'wav'])
         
@@ -267,9 +251,14 @@ transcription = None
 def speech_to_text():
     st.title("Speech to Text Transcription")
     languages_reverse = {v: k for k, v in languages.items()}
-    st.write("This page enables you to Transcription of auido and video.")
+    st.subheader("You can Transcribe audio & video here.")
+    st.write('''We have 3 different models that you can choose from:
+1. Tiny - Fastest but Low Accuracy
+2. Base - Balanced between Speed and Accuracy
+3. Small - Slowest but High Accuracy''')
 
-    modeltype = st.selectbox("Select Model Type", ["tiny", "base","small"])
+    modeltype = st.selectbox("Select Model Type", ["Tiny", "Base","Small"])
+    modeltype = modeltype.lower()
     selected_language_code = st.selectbox("Select a language", list(languages.values()), format_func=lambda x: languages_reverse[x])
     
     uploaded_file = st.file_uploader("Upload a video or audio file", type=['mp4', 'mkv', 'avi', 'mp3', 'ogg', 'flac', 'wav'])
@@ -346,23 +335,74 @@ def download_text_file_withtime(data, filename='transcript_with_time.srt'):
     )
 
     
+def Creators():
+    tab1, tab2, tab3, tab4 = st.tabs(["Dheeraj", "Kartik Jain", "Ritwick Pal", "Rohit Kumar"])
+    with tab1:
+        st.header("Dheeraj Kumar")
+        st.write("Hello! I'm Dheeraj, I'm an engineering enthusiast currently based in New Delhi. My expertise lies in the realms of Machine Learning and Deep Learning. While honing these skills, I've also ventured into the dynamic field of web development. Let's connect and explore the possibilities in the tech world!")
+        st.write("Socials:")
+        mention(label="Github", icon="github", url="https://github.com/Dheeraj9811/")
+        mention(label="Linkedin", icon="🔗", url="https://www.linkedin.com/in/dheeraj-deshwal/")
+        st.write("Dheeraj20194@iiitd.ac.in")
+
+    with tab2:
+        st.header("Kartik Jain")
+        st.write("I am a 4-year Computer Science and Social Science Undergraduate at IIIT Delhi. I am an academically goal-driven individual who has strong problem-solving skills. I am open to new experiences and opportunities.")
+        st.write("Socials:")
+        mention(label="Github", icon="github", url="https://github.com/Kartik20440")
+        mention(label="Linkedin", icon="🔗", url="https://www.linkedin.com/in/kartikxjain/")
+        st.write("kartik20440@iiitd.ac.in")
+
+    with tab3:
+        st.header("Ritwick Pal")
+        st.write("As a passionate 4th year Computer Science student, I love exploring the fascinating worlds of data structures and algorithms, mathematics, and cognitive science. I find it thrilling to dive deep into complex concepts and uncover their practical applications, always striving to learn and grow as a problem-solver.")
+        st.write("Socials:")
+        mention(label="Github", icon="github", url="https://github.com/Ritwick01")
+        mention(label="Linkedin", icon="🔗", url="https://www.linkedin.com/in/ritwickpal/")
+        st.write("rishabh20459@iiitd.ac.in")
+
+    with tab4:
+        st.header("Rohit")
+        st.write("As a Senior at IIIT Delhi, I have a strong interest in data structures and algorithms, and I am passionate about solving real-world problems through programming. I have completed several projects where I have applied my skills in software development.")
+        st.write("Socials:")
+        mention(label="Github", icon="github", url="https://github.com/rohit21755")
+        mention(label="Linkedin", icon="🔗", url="https://www.linkedin.com/in/rohit-kumar-534919201/")
+        st.write("Rohit@iiitd.ac.in")
     
-            
+       
 # -------------------------------------------------------------------------------------------------------------------------
 # Main function to handle page navigation
 def main():
-    st.sidebar.title("Pages navigation")
-    page = st.sidebar.radio("Choose", ["Home", "Segment Audio", "Speech to Text"])
+
+    st.set_page_config(page_title="VoiceVerse", page_icon="🗣️", layout="centered", initial_sidebar_state="expanded")
+    st.sidebar.title("VoiceVerse 🗣️ ")
+    page = st.sidebar.radio(" ", ["Home", "Segment Audio", "Speech to Text","Creators"])
+    st.sidebar.subheader("Feedback Form:")
+    st.sidebar.image("QR.png", use_column_width=True)
+
+    st.markdown(""" <style>
+    #MainMenu {visibility: hidden;}
+	footer {visibility: hidden;}
+	</style> """, unsafe_allow_html=True)
 
     if page == "Home":
         home()
     elif page == "Segment Audio":
-        # here using cache to load the audio file directly if available in segment audio folder 
         segment_audio()
     elif page == "Speech to Text":
         speech_to_text()
 
+    elif page == "Creators":
+        Creators()
+
+
 if __name__ == "__main__":
+    # "uploads" exist then delete the folder with content
+    if os.path.exists("uploads"):
+        shutil.rmtree("uploads")    
+        print("deleted uploads folder")
+
+
     if not os.path.exists("uploads"):
         os.makedirs("uploads")
     main()
