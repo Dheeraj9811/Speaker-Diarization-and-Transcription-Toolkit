@@ -230,12 +230,7 @@ def segment_audio():
             data=open(os.path.join("segmented_audio", selected_file), 'rb').read(),
             file_name=selected_file )
         
-    # if st.button("Go to previous Page"):
-    #     st.session_state.availabl = False
-            
-    #     print(st.session_state.availabl)
-    #         # reload the website
-    #     st.rerun()
+   
                 
         
         
@@ -379,7 +374,22 @@ def show_privacy_policy_popup():
     """
     # alert("User Permissions and Data Privacy\\n\\n6. Opt-In/Opt-Out Mechanism: We respect your preferences. You have the liberty to opt in or opt out of various data processing activities, ensuring full control over your data.\\n7. Cookie Policy: Our cookie policy is transparent, informing you about cookie usage and providing options to manage your preferences regarding tracking technologies.\\n8. GDPR and Privacy Regulations Compliance: We are fully committed to compliance with GDPR and other relevant privacy regulations, ensuring the protection of your data rights and privacy.\\n9. Children's Privacy: Compliance with regulations concerning data collection from children is paramount. We adhere to all applicable laws and obtain necessary parental consent where required.\\n10. Terms of Service and Privacy Policy: Please refer to our comprehensive Terms of Service and Privacy Policy documents for detailed information on your rights, responsibilities, and our commitment to data privacy.");
 
-    components.html(privacy_policy_text, height=100, width=100)       
+    components.html(privacy_policy_text, height=100, width=100)
+
+
+# function to change size of widget
+def ChangeWidgetFontSize(wgt_txt, wch_font_size = '12px'):
+    htmlstr = """<script>var elements = window.parent.document.querySelectorAll('*'), i;
+                    for (i = 0; i < elements.length; ++i) { if (elements[i].innerText == |wgt_txt|) 
+                        { elements[i].style.fontSize='""" + wch_font_size + """';} } </script>  """
+
+    htmlstr = htmlstr.replace('|wgt_txt|', "'" + wgt_txt + "'")
+    components.html(f"{htmlstr}", height=0, width=0)
+
+
+
+
+
 # -------------------------------------------------------------------------------------------------------------------------
 # Main function to handle page navigation
 def main():
@@ -391,7 +401,8 @@ def main():
     
                          
     st.sidebar.title("VoiceVerse 🗣️ ")
-    page = st.sidebar.radio(" ", ["Home", "Segment Audio", "Speech to Text","Creators"])
+    page = st.sidebar.radio(" ", ("Home", "Segment Audio", "Speech to Text","Creators"))
+    ChangeWidgetFontSize(page,'25px')
     st.sidebar.subheader("Feedback Form:")
     st.sidebar.image("QR.png", use_column_width=True)
 

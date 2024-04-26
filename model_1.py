@@ -6,7 +6,8 @@ from pydub import AudioSegment
 import os
 from dotenv import load_dotenv
 from moviepy.editor import VideoFileClip, concatenate_videoclips
-load_dotenv()
+# load_dotenv() if running locally uncomment and use ur own key 
+import streamlit as st
 
 device = None
 
@@ -14,7 +15,7 @@ device = None
 def load_model(modeltype = "base"):
     global device
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    pipeline = Pipeline.from_pretrained("pyannote/speaker-diarization-3.1",use_auth_token=os.getenv("use_auth_token"))
+    pipeline = Pipeline.from_pretrained("pyannote/speaker-diarization-3.1",use_auth_token=st.secrets["use_auth_token"]) # running locally then use ur own key
     pipeline = pipeline.to(device)
     return pipeline
 
