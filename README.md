@@ -7,26 +7,75 @@ VoiceVerse Toolkit is a Streamlit-based application that enables users to perfor
 To get started with the project, follow these steps:
 
 ### Prerequisites
+    
+    #install streamlit
+    pip install streamlit
 
-Make sure you have Anaconda installed on your system.
+
+#install pytorch
+RUN pip3 install torch torchvision torchaudio
+
+#Project file
+    apt update && apt install ffmpeg -y
+    pip install setuptools-rust && \
+	python3 -m pip install moviepy && \
+	python3 -m pip install pydub && \
+	python3 -m pip install -U openai-whisper && \
+	python3 -m pip install pyannote.audio && \
+	python3 -m pip install python-dotenv && \
+	python3 -m pip install streamlit-extras
+
+#install pytorch
+RUN pip3 install torch torchvision torchaudio
+
+#Project file
+RUN apt update && apt install ffmpeg -y
+RUN pip install setuptools-rust && \
+	python3 -m pip install moviepy && \
+	python3 -m pip install pydub && \
+	python3 -m pip install -U openai-whisper && \
+	python3 -m pip install pyannote.audio && \
+	python3 -m pip install python-dotenv && \
+	python3 -m pip install streamlit-extras
 
 ### Installation
 
 1. Clone this repository to your local machine:
     git clone <https://github.com/Dheeraj9811/Speaker-Diarization-and-Transcription-Toolkit>
 
-2. Navigate to the project directory:
+2. Navigate to the project directory: Speaker-Diarization-and-Transcription-Toolkit/src
 
-3. Create a Conda environment using the provided environment files:
-conda env create -f req_model_2.txt -f environment.txt
-
-4. Activate the Conda environment:
-conda activate <environment_name>
 
 ### Running the Application
 
 To run the application, execute the following command:
---- streamlit run app.py
+--- streamlit run main.py --server.maxUploadSize 2000
+<!-- images of project -->
+<img src="/img/projectimg1.png" alt="cmd" width="500" height="300">
+<img src="/img/projectimg2.png" alt="homepage" width="500" height="300">
+<img src="/img/projectimg3.png" alt="Diarization page" width="500" height="300">
+<img src="/img/projectimg4.png" alt="project image" width="500" height="300">
+<img src="/img/projectimg5.png" alt="mobile view" width="500" height="300">
+
+
+
+
+# Dockerversion also available 
+ **Note Docker is made to use gpu so if you dont have gpu install on system comment line 16 to 29**
+- git clone git clone https://github.com/Dheeraj9811/Speaker-Diarization-and-Transcription-Toolkit
+- cd Speaker-Diarization-and-Transcription-Toolkit
+- docker build -t toolkit .
+- docker run -it --name mytoolkit \
+    --env="DISPLAY=$DISPLAY" \
+    --env="QT_X11_NO_MITSHM=1" \
+    --env="XAUTHORITY=$XAUTH" \
+    --net=host \
+    --privileged \
+    --runtime=nvidia \
+    --gpus all \
+    toolkit
+
+
 
 
 ## Usage
