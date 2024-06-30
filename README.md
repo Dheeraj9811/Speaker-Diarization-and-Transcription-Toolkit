@@ -4,20 +4,17 @@ VoiceVerse Toolkit is a Streamlit-based application that enables users to perfor
 
 ## Getting Started
 
-To get started with the project, follow these steps:
+The project has been developed and tested on Ubuntu 20.04 and Windows (Note: For Windows, ffmpeg needs to be installed separately from the internet). Alternatively, you can use the provided Dockerfile. Feel free to modify the Dockerfile as needed. If not using GPU, you can opt for a lighter image version like Python 3.8 without CUDA and Ubuntu full version.
+
+To begin with the project, follow these steps:
+
+
+
 
 ### Prerequisites
-    
-    #install streamlit
-    pip install streamlit
-
-
-# install pytorch
-
--  
-
-#Project file
 ```bash
+#install streamlit
+-   pip install streamlit
 -   pip install torch torchvision torchaudio
 -   apt update && apt install ffmpeg -y
 -   pip install setuptools-rust && \
@@ -28,18 +25,6 @@ To get started with the project, follow these steps:
 -   python3 -m pip install python-dotenv && \
 -   python3 -m pip install streamlit-extras
 
-#install pytorch
-pip3 install torch torchvision torchaudio
-
-#Project file
-RUN apt update && apt install ffmpeg -y
-RUN pip install setuptools-rust && \
-	python3 -m pip install moviepy && \
-	python3 -m pip install pydub && \
-	python3 -m pip install -U openai-whisper && \
-	python3 -m pip install pyannote.audio && \
-	python3 -m pip install python-dotenv && \
-	python3 -m pip install streamlit-extras
 ```
 ### Installation
 
@@ -51,15 +36,10 @@ RUN pip install setuptools-rust && \
 
 ### Running the Application
 
-To run the application, execute the following command:
---- streamlit run main.py --server.maxUploadSize 2000
-<!-- images of project -->
-<img src="/img/projectimg1.png" alt="cmd">
-<img src="/img/projectimg2.png" alt="homepage">
-<img src="/img/projectimg3.png" alt="Diarization page" width="500" height="300">
-<img src="/img/projectimg4.png" alt="project image" width="500" height="300">
-<img src="/img/projectimg5.png" alt="mobile view">
-
+# To run the application, execute the following command:
+```bash 
+streamlit run main.py --server.maxUploadSize 2000
+```
 
 
 
@@ -79,8 +59,6 @@ To run the application, execute the following command:
     toolkit
 
 
-
-
 ## Usage
 
 Once the application is running, open your web browser and navigate to the URL provided by Streamlit (usually `localhost:8501`). You will see the Speaker Diarization and Transcription Toolkit interface, where you can upload audio or video files, perform speaker diarization, listen to individual speakers, and generate speaker transcriptions.
@@ -97,4 +75,12 @@ Contributions are welcome! If you have any ideas for improvements, features you'
 
 - Pyannote.audio: A toolkit for speaker diarization.
 - Whisper models: State-of-the-art models for speaker diarization and transcription.
+
+<!-- images of project -->
+<img src="/img/projectimg1.png" alt="cmd">
+<img src="/img/projectimg2.png" alt="homepage">
+<img src="/img/projectimg3.png" alt="Diarization page">
+<img src="/img/projectimg4.png" alt="project image">
+<img src="/img/projectimg5.png" alt="mobile view">
+
 
