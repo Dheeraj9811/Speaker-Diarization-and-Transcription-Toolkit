@@ -12,21 +12,24 @@ To get started with the project, follow these steps:
     pip install streamlit
 
 
-#install pytorch
-RUN pip3 install torch torchvision torchaudio
+# install pytorch
+
+-  
 
 #Project file
-    apt update && apt install ffmpeg -y
-    pip install setuptools-rust && \
-	python3 -m pip install moviepy && \
-	python3 -m pip install pydub && \
-	python3 -m pip install -U openai-whisper && \
-	python3 -m pip install pyannote.audio && \
-	python3 -m pip install python-dotenv && \
-	python3 -m pip install streamlit-extras
+```bash
+-   pip install torch torchvision torchaudio
+-   apt update && apt install ffmpeg -y
+-   pip install setuptools-rust && \
+-   python3 -m pip install moviepy && \
+-   python3 -m pip install pydub && \
+-   python3 -m pip install -U openai-whisper && \
+-   python3 -m pip install pyannote.audio && \
+-   python3 -m pip install python-dotenv && \
+-   python3 -m pip install streamlit-extras
 
 #install pytorch
-RUN pip3 install torch torchvision torchaudio
+pip3 install torch torchvision torchaudio
 
 #Project file
 RUN apt update && apt install ffmpeg -y
@@ -37,7 +40,7 @@ RUN pip install setuptools-rust && \
 	python3 -m pip install pyannote.audio && \
 	python3 -m pip install python-dotenv && \
 	python3 -m pip install streamlit-extras
-
+```
 ### Installation
 
 1. Clone this repository to your local machine:
@@ -52,10 +55,10 @@ To run the application, execute the following command:
 --- streamlit run main.py --server.maxUploadSize 2000
 <!-- images of project -->
 <img src="/img/projectimg1.png" alt="cmd">
-<img src="/img/projectimg2.png" alt="homepage" width="500" height="300">
+<img src="/img/projectimg2.png" alt="homepage">
 <img src="/img/projectimg3.png" alt="Diarization page" width="500" height="300">
 <img src="/img/projectimg4.png" alt="project image" width="500" height="300">
-<img src="/img/projectimg5.png" alt="mobile view" width="500" height="300">
+<img src="/img/projectimg5.png" alt="mobile view">
 
 
 
