@@ -51,7 +51,7 @@ RUN pip install setuptools-rust && \
 To run the application, execute the following command:
 --- streamlit run main.py --server.maxUploadSize 2000
 <!-- images of project -->
-<img src="/img/projectimg1.png" alt="cmd" width="500" height="300">
+<img src="/img/projectimg1.png" alt="cmd">
 <img src="/img/projectimg2.png" alt="homepage" width="500" height="300">
 <img src="/img/projectimg3.png" alt="Diarization page" width="500" height="300">
 <img src="/img/projectimg4.png" alt="project image" width="500" height="300">
