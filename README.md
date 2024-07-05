@@ -1,4 +1,4 @@
-﻿# VoiceVerse- Redifining Audio Content {Speaker Diarization and Transcription Toolkit}
+﻿# VoiceVerse- Redefining Audio Content {Speaker Diarization and Transcription Toolkit}
 
 VoiceVerse Toolkit is a Streamlit-based application that enables users to perform speaker diarization, divide audio and video into different speaker segments, listen to individual speakers, and generate speaker transcriptions using the Pyannote.audio and Whisper models.
 
